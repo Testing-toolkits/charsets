@@ -12,7 +12,7 @@ const (
 		MathematicsSymbols + MathematicsFonts + InvertedLatinLetters + Braille +
 		IPA + FullWidthCharacters + Units + Latin + Cyrillic + Chinese +
 		Japanese + Korean + Arabic + Ethiopian + Devanagari + Bengali +
-		Tamil + Tibetan + Phoenician + Games + Runes
+		Tamil + Tibetan + Phoenician + Games + Runes + ASCII
 
 	// ASCII represents set containing only selected ASCII characters.
 	// There are missing following characters:
@@ -68,7 +68,7 @@ const (
 	// Braille is used by blind people
 	Braille = "⠁⠃⠉⠙⠑⠋⠛⠓⠊⠚⠅⠇⠍⠝⠕⠏⠟⠗⠎⠞⠥⠧⠺⠭⠽⠵⠼⠁⠼⠃⠼⠉⠼⠙⠼⠑⠼⠋⠼⠛⠼⠓⠼⠊⠼⠚⠂⠆⠒⠦⠖⠂⠼⠚⠐⠣⠸⠌⠸⠡⠤"
 
-	// Latin Latin Alphabet (aka Roman alphabet) is used to write most Western languages, including:
+	// Latin Alphabet (aka Roman alphabet) is used to write most Western languages, including:
 	// English, German, French, Spanish, Italian.
 	Latin = "ABCDefghijǞǠǺȀȨḜẸẺȎȪȬȮỬỮỰƯɄƁƂḂḄḆɃŦȾƲṼṾŴỾȲÝɎƵƉƐƎŊƩÐƸǮƷƔǶƖỺỼƆƏẞɊÞƜɅƱǷȜűųưȕȗẉẘẋẍᶘᶋʆʃðʤʣǆǳʩᴉɯɰɹɺᴑᴒᴝᴞᴟᴥʡʢƾƻʔɂƄƧƼƨƽ"
 
@@ -111,7 +111,7 @@ const (
 
 	// Runes represents set of old runes. Rune alphabets was used to write various
 	// Germanic languages before the adoption of the Latin alphabet.
-	Runes = "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᚻᚾᛁᛄᛇᚠᚢᚦᚬᚱᚴᚭᚱᚴᚽᚿᚥᛪᛦ(ᚤ)(ᛨ)ᛎ"
+	Runes = "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᚻᚾᛁᛄᛇᚠᚢᚦᚬᚱᚴᚭᚱᚴᚽᚿᚥᛪᛦᚤᛨᛎ"
 )
 
 var seededRand = rand.New(
@@ -120,12 +120,10 @@ var seededRand = rand.New(
 // RandomRunes returns random slice of runes of given length.
 // Argument length indices length of output slice.
 // Argument charset indices input charset from which output slice will be composed.
-func RandomRunes(length int, charset []rune) []rune {
-	output := make([]rune, 0, length)
-	charsetR := charset
-
-	for i := 0; i < length; i++ {
-		output = append(output, charsetR[seededRand.Intn(len(charsetR))])
+func RandomRunes[intLike ~int, runeLike ~[]rune](length intLike, charset runeLike) runeLike {
+	output := make(runeLike, 0, length)
+	for i := 0; i < int(length); i++ {
+		output = append(output, charset[seededRand.Intn(len(charset))])
 	}
 
 	return output
